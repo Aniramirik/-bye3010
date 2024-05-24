@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - 5th Grade Class Goodbye</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Game specific styles */
+        #footballCanvas {
+            background-color: green;
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Games</h1>
+            <p>Have fun with some games!</p>
+            <div class="buttons">
+                <a href="index.html">Home</a>
+                <a href="meet-a-student.html">Meet a Student</a>
+                <a href="heritage-map.html">Heritage Map</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <h2>Fun Games</h2>
+            <p>Enjoy playing our version of a simple football game!</p>
+            <canvas id="footballCanvas" width="600" height="400"></canvas>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 5th Grade Class. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('footballCanvas');
+        const context = canvas.getContext('2d');
+
+        // Load player image
+        const playerImg = new Image();
+        playerImg.src = 'player.png'; // Make sure this image is in the same directory
+
+        // Player variables
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 60,
+            width: 40,
+            height: 60,
+            speed: 5,
+            dx: 0,
+            dy: 0
+        };
+
+        // Ball variables
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 10,
+            speed: 4,
+            dx: 4,
+            dy: 4
+        };
+
+        // Draw player
+        function drawPlayer() {
+            context.drawImage(playerImg, player.x, player.y, player.width, player.height);
+        }
+
+        // Draw ball
+        function drawBall() {
+            context.beginPath();
+            context.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            context.fillStyle = 'white';
+            context.fill();
+            context.closePath();
+        }
+
+        // Move player
+        function movePlayer() {
+            player.x += player.dx;
+            player.y += player.dy;
+
+            // Wall detection
+            if (player.x < 0) {
+                player.x = 0;
+            }
+            if (player.x + player.width > canvas.width) {
+                player.x = canvas.width - player.width;
+            }
+            if (player.y < 0) {
+                player.y = 0;
+            }
+            if (player.y + player.height > canvas.height) {
+                player.y = canvas.height - player.height;
+            }
+        }
+
+        // Move ball
+        function moveBall() {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Wall detection
+            if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                ball.dx *= -1;
+            }
+            if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+                ball.dy *= -1;
+            }
+        }
+
+        // Update canvas drawing and animation
+        function update() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawPlayer();
+            drawBall();
+
+            movePlayer();
+            moveBall();
+
+            requestAnimationFrame(update);
+        }
+
+        // Keydown event
+        function keyDown(e) {
+            if (e.key === 'ArrowRight' || e.key === 'Right') {
+                player.dx = player.speed;
+            } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
+                player.dx = -player.speed;
+            } else if (e.key === 'ArrowUp' || e.key === 'Up') {
+                player.dy = -player.speed;
+            } else if (e.key === 'ArrowDown' || e.key === 'Down') {
+                player.dy = player.speed;
+            }
+        }
+
+        // Keyup event
+        function keyUp(e) {
+            if (
+                e.key === 'ArrowRight' ||
+                e.key === 'Right' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'Left' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'Up' ||
+                e.key === 'ArrowDown' ||
+                e.key === 'Down'
+            ) {
+                player.dx = 0;
+                player.dy = 0;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('keydown', keyDown);
+        document.addEventListener('keyup', keyUp);
+
+        // Load player image and start the game
+        playerImg.onload = function() {
+            update();
+        };
+    </script>
+</body>
+</html>
+
+
+
